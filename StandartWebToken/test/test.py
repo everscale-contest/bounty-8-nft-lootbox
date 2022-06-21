@@ -81,6 +81,9 @@ nft.call_method("open")
 ts4.dispatch_messages()
 secondsans = nft.call_getter("getJson",dict(answerId=0))
 
+print(firstans)
+print(secondsans)
+
 if firstans == secondsans:
     print("Failed")
 

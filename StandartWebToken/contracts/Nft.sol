@@ -12,6 +12,7 @@ import 'libs/TIP4_2/TIP4_2Nft.sol';
 import 'libs/TIP4_3/TIP4_3Nft.sol';
 import 'libs/TIP4_4/TIP4_4Nft.sol';
 import './interfaces/ITokenBurned.sol';
+import './JsonGenerator.sol';
 
 
 contract Nft is TIP4_2Nft, TIP4_3Nft {
@@ -20,7 +21,7 @@ contract Nft is TIP4_2Nft, TIP4_3Nft {
 
     bool _active = false;
     IMG _img;
-
+    
     constructor(
         address owner,
         address sendGasTo,
@@ -98,14 +99,25 @@ contract Nft is TIP4_2Nft, TIP4_3Nft {
         ITokenBurned(_collection).onTokenBurned(_id, _owner, _manager);
         selfdestruct(dest);
     }
+    using JsonWriter for JsonWriter.Json;
     function getJson() external virtual view override responsible returns (string json) {
-        string _json;
-        if (_active) { // TODO make proposal to solidty compiler
-            _json = '{"type": "Basic Nft", "name": "Opened nft lootbox","preview": {"source":"' + format("{}",_img.link) +'","mimetype":"' + format("{}", _img.mimetype) + '"}}';
+        JsonWriter.Json writer;
+
+        writer = writer.writeStart();
+        
+        writer = writer.writeString("type", "Basic Nft");
+        if (_active) { 
+            writer = writer.writeString("name", "Opened nft lootbox");
+            writer = writer.writeStartName("preview");
+            writer = writer.writeString("source", format("{}",_img.link));
+            writer = writer.writeString("mimetype", format("{}",_img.mimetype));
+            writer = writer.writeEnd();
         } else {
-            _json = '{"type": "Basic Nft", "name": "Closed nft lootbox", "description": "You need to wait"}';
+            writer = writer.writeString("name", "Opened nft lootbox");
+            writer = writer.writeString("description", "You need to wait");
         }
-        return {value: 0, flag: 64, bounce: false} (_json);
+        writer = writer.writeEnd();
+        return {value: 0, flag: 64, bounce: false} (writer.value);
     }
 
 }
