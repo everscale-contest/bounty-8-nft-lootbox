@@ -7,7 +7,6 @@ pragma AbiHeader pubkey;
 
 import 'libs/TIP4_2/TIP4_2Collection.sol';
 import 'libs/TIP4_3/TIP4_3Collection.sol';
-import 'libs/TIP4_4/TIP4_4Collection.sol';
 import 'libs/access/OwnableExternal.sol';
 import './interfaces/ITokenBurned.sol';
 import './Nft.sol';
@@ -37,7 +36,6 @@ contract Collection is TIP4_2Collection, TIP4_3Collection , OwnableExternal, ITo
         TvmCell codeNft, 
         TvmCell codeIndex,
         TvmCell codeIndexBasis,
-        TvmCell codeStorage,
         uint256 ownerPubkey,
         string json,
         uint128 mintingFee,
@@ -87,7 +85,6 @@ contract Collection is TIP4_2Collection, TIP4_3Collection , OwnableExternal, ITo
             _indexDeployValue,
             _indexDestroyValue,
             _codeIndex,
-            _imgs,
             _timeToDeploy
         ); 
 
@@ -110,6 +107,15 @@ contract Collection is TIP4_2Collection, TIP4_3Collection , OwnableExternal, ITo
         require(msg.sender == _resolveNft(id));
         emit NftBurned(id, msg.sender, owner, manager);
         _totalSupply--;
+    }
+
+    function getRandomObject(uint256 id) external override {
+        require(msg.sender == _resolveNft(id));
+        rnd.shuffle();
+        uint _lootId = rnd.next(_imgs.length);
+        IMG _img = _imgs[_lootId];
+        delete _imgs[_lootId];
+        Nft(msg.sender).setObject{value: 0, flag: 64, bounce: false}(_img);
     }
 
     function setRemainOnNft(uint128 remainOnNft) external virtual onlyOwner {

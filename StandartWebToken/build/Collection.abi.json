@@ -9,7 +9,6 @@
 				{"name":"codeNft","type":"cell"},
 				{"name":"codeIndex","type":"cell"},
 				{"name":"codeIndexBasis","type":"cell"},
-				{"name":"codeStorage","type":"cell"},
 				{"name":"ownerPubkey","type":"uint256"},
 				{"name":"json","type":"string"},
 				{"name":"mintingFee","type":"uint128"},
@@ -41,6 +40,14 @@
 				{"name":"id","type":"uint256"},
 				{"name":"owner","type":"address"},
 				{"name":"manager","type":"address"}
+			],
+			"outputs": [
+			]
+		},
+		{
+			"name": "getRandomObject",
+			"inputs": [
+				{"name":"id","type":"uint256"}
 			],
 			"outputs": [
 			]

@@ -19,9 +19,7 @@ contract Nft is TIP4_2Nft, TIP4_3Nft {
     uint _timeToDeploy;
 
     bool _active = false;
-
-    uint _lootId;
-    IMG[] _imgs;
+    IMG _img;
 
     constructor(
         address owner,
@@ -31,7 +29,6 @@ contract Nft is TIP4_2Nft, TIP4_3Nft {
         uint128 indexDeployValue,
         uint128 indexDestroyValue,
         TvmCell codeIndex,
-        IMG[] imgs,
         uint timeToDeploy
     ) TIP4_1Nft(
         owner,
@@ -45,7 +42,6 @@ contract Nft is TIP4_2Nft, TIP4_3Nft {
         codeIndex
     ) public {
         tvm.accept();
-        _imgs = imgs;
         _timeToDeploy = timeToDeploy;
     }
 
@@ -53,9 +49,7 @@ contract Nft is TIP4_2Nft, TIP4_3Nft {
         require(now > _timeToDeploy);
         require(_active == false);
         tvm.accept();
-        rnd.shuffle();
-        _lootId = rnd.next(_imgs.length);
-        _active = true;
+        ITokenBurned(_collection).getRandomObject{value: 0.1 ton}(_id); // value will be returned but without gas on getting random object
     }
 
     function _beforeTransfer(
@@ -92,6 +86,13 @@ contract Nft is TIP4_2Nft, TIP4_3Nft {
         TIP4_3Nft._afterChangeOwner(oldOwner, newOwner, sendGasTo, callbacks);
     }
 
+    function setObject(IMG img) external {
+        require(msg.sender == _collection,110);
+        tvm.accept();
+        _img = img;
+        _active = true;
+    }
+
     function burn(address dest) external virtual onlyManager {
         tvm.accept();
         ITokenBurned(_collection).onTokenBurned(_id, _owner, _manager);
@@ -99,8 +100,8 @@ contract Nft is TIP4_2Nft, TIP4_3Nft {
     }
     function getJson() external virtual view override responsible returns (string json) {
         string _json;
-        if (_active) {
-            _json = '{"type": "Basic Nft", "name": "Opened nft lootbox","preview": {"source":"' + format("{}",_imgs[_lootId].link) +'","mimetype":"' + format("{}", _imgs[_lootId].mimetype) + '"}}';
+        if (_active) { // TODO make proposal to solidty compiler
+            _json = '{"type": "Basic Nft", "name": "Opened nft lootbox","preview": {"source":"' + format("{}",_img.link) +'","mimetype":"' + format("{}", _img.mimetype) + '"}}';
         } else {
             _json = '{"type": "Basic Nft", "name": "Closed nft lootbox", "description": "You need to wait"}';
         }

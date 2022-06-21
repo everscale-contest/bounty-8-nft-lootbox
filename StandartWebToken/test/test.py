@@ -78,6 +78,7 @@ firstans = nft.call_getter("getJson",dict(answerId=0))
 
 ts4.core.set_now(now + 120)
 nft.call_method("open")
+ts4.dispatch_messages()
 secondsans = nft.call_getter("getJson",dict(answerId=0))
 
 if firstans == secondsans:

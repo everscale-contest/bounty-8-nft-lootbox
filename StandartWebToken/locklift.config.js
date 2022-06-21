@@ -1,12 +1,11 @@
 module.exports = {
   compiler: {
     // Specify path to your TON-Solidity-Compiler
-    path: '$HOME/.tondev/solidity/solc',
+    path: '$HOME/.everdev/solidity/solc',
   },
   linker: {
     // Path to your TVM Linker
-    path: '$HOME/.tondev/solidity/tvm_linker',
-    lib: '$HOME/.tondev/solidity/stdlib_sol.tvm',
+    path: '$HOME/.everdev/solidity/tvm_linker',
   },
   networks: {
     // You can use TON labs graphql endpoints or local node
@@ -14,7 +13,7 @@ module.exports = {
       ton_client: {
         // See the TON client specification for all available options
         network: {
-          server_address: 'http://localhost',
+          server_address: 'http://localhost/',
         },
       },
       // This giver is default local-node giver
@@ -24,12 +23,11 @@ module.exports = {
         key: '',
       },
       // Use tonos-cli to generate your phrase
-      // $ tonos-cli genphrase
       // !!! Never commit it in your repos !!!
       keys: {
         phrase: '',
         amount: 20,
       }
     },
-  }
+  },
 };

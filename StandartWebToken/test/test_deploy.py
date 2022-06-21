@@ -5,9 +5,6 @@ SERVER_ADDRESS = "https://net.ton.dev"
 
 def getClient():
     return TonClient(config=ClientConfig(network=NetworkConfig(server_address=SERVER_ADDRESS)))
-
-
-
  
 keypair = getClient().crypto.generate_random_sign_keys()
 signer  = Signer.Keys(keys=keypair)
