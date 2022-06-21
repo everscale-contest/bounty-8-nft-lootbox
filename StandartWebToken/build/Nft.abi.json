@@ -192,6 +192,7 @@
 		{"name":"_codeIndex","type":"cell"},
 		{"name":"_timeToDeploy","type":"uint256"},
 		{"name":"_active","type":"bool"},
+		{"name":"_isOpened","type":"bool"},
 		{"components":[{"name":"mimetype","type":"string"},{"name":"link","type":"string"}],"name":"_img","type":"tuple"}
 	]
 }

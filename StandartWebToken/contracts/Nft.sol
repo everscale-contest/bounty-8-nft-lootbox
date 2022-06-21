@@ -20,6 +20,7 @@ contract Nft is TIP4_2Nft, TIP4_3Nft {
     uint _timeToDeploy;
 
     bool _active = false;
+    bool _isOpened = false;
     IMG _img;
     
     constructor(
@@ -48,8 +49,9 @@ contract Nft is TIP4_2Nft, TIP4_3Nft {
 
     function open() external {
         require(now > _timeToDeploy);
-        require(_active == false);
+        require(_isOpened == false);
         tvm.accept();
+        _isOpened = true;
         ITokenBurned(_collection).getRandomObject{value: 0.1 ton}(_id); // value will be returned but without gas on getting random object
     }
 
